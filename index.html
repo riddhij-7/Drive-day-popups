@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upcoming Drive</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f0fdf4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .popup-container {
+      display: none;
+      max-width: 800px;
+      width: 100%;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .popup-image {
+      width: 50%;
+    }
+
+    .popup-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popup-content {
+      width: 50%;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .popup-content h2 {
+      margin-top: 0;
+      color: #064e3b;
+      font-size: 1.75rem;
+    }
+
+    .popup-content p {
+      font-size: 1rem;
+      color: #333;
+      margin: 0.5rem 0;
+    }
+
+    .popup-content .label {
+      font-weight: bold;
+      margin: 1rem 0 0.5rem;
+    }
+
+    .popup-content .info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.4rem 0;
+      font-size: 0.95rem;
+      color: #1f2937;
+    }
+
+    .popup-content .join-btn {
+      margin-top: 1.5rem;
+      background-color: #064e3b;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .loader {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #555;
+    }
+
+    @media (max-width: 768px) {
+      .popup-container {
+        flex-direction: column;
+      }
+      .popup-image, .popup-content {
+        width: 100%;
+      }
+      .popup-image {
+        max-height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="loader" id="loader">Loading upcoming drive...</div>
+
+<div class="popup-container" id="popup-card">
+  <div class="popup-image">
+    <img src="8b735590-317e-4f7c-b5e8-2c1cbc3d7993.png" alt="Drive Image">
+  </div>
+  <div class="popup-content">
+    <h2>Join Our Next Drives!</h2>
+    <p>Be a part of our green mission. Forengers is organizing a tree plantation drive this weekend in Pune.</p>
+
+    <div class="label" id="drive-title">Plantation Drive</div>
+    <div class="info">📅 <span id="drive-date">--</span></div>
+    <div class="info">📍 <span id="drive-location">--</span></div>
+    <div class="info">⏰ <span id="drive-time">--</span></div>
+
+    <a href="#" class="join-btn">JOIN US</a>
+  </div>
+</div>
+
+<script>
+  const API_URL = "https://sheetdb.io/api/v1/gwhzoghaxiwbu";
+
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+      const upcomingDrives = data.filter(item => item.status.toLowerCase() === "upcoming");
+      if (upcomingDrives.length === 1) {
+        const drive = upcomingDrives[0];
+
+        document.getElementById('drive-title').textContent = drive.drive_title || 'Plantation Drive';
+        document.getElementById('drive-date').textContent = drive.date || '--';
+        document.getElementById('drive-location').textContent = drive.location || '--';
+        document.getElementById('drive-time').textContent = drive.time || '--';
+
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('popup-card').style.display = 'flex';
+      } else {
+        document.getElementById('loader').textContent = 'No upcoming drives available.';
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById('loader').textContent = 'Failed to fetch data.';
+    });
+</script>
+
+</body>
+</html>
